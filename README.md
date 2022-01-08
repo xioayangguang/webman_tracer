@@ -23,7 +23,6 @@ return [
 > 我们需要在 config 目录下，增加 tracer.php 配置
 
 ```php
-//定义切入方法区分大小写
 <?php
 //区分大小写
 use xioayangguang\webman_tracer\aspect\ElasticsearchAspect;
@@ -135,7 +134,7 @@ class GenericAspect implements AspectInterface
 ```shell
 php start.php start
 curl  http://127.0.0.1:8787
-此时控制台打印前置和后置切面函数打印值
+查看平台数据
 ```
 
 
