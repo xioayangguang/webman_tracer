@@ -137,4 +137,7 @@ curl  http://127.0.0.1:8787
 查看平台数据
 ```
 
+![avatar](./doc/1.png)
+![avatar](./doc/2.png)
+
 
