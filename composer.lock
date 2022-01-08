@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4f0db26c8c56dfcb3dd5fc757e396e48",
+    "content-hash": "b22a4b7af8d0f7774fc2fb0170e5ad1f",
     "packages": [
         {
             "name": "monolog/monolog",
@@ -623,12 +623,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/xioayangguang/webman_aop.git",
-                "reference": "33bacb54408df7e9a3b223b442a46ef127664569"
+                "reference": "f5676db5650f5e53912e75be5d541a83c6762afd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/xioayangguang/webman_aop/zipball/33bacb54408df7e9a3b223b442a46ef127664569",
-                "reference": "33bacb54408df7e9a3b223b442a46ef127664569",
+                "url": "https://api.github.com/repos/xioayangguang/webman_aop/zipball/f5676db5650f5e53912e75be5d541a83c6762afd",
+                "reference": "f5676db5650f5e53912e75be5d541a83c6762afd",
                 "shasum": ""
             },
             "require": {
@@ -660,7 +660,7 @@
                 "issues": "https://github.com/xioayangguang/webman_aop/issues",
                 "source": "https://github.com/xioayangguang/webman_aop/tree/v0.0.1"
             },
-            "time": "2022-01-08T10:01:43+00:00"
+            "time": "2022-01-08T13:10:35+00:00"
         }
     ],
     "packages-dev": [],
@@ -670,7 +670,8 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "~7.2"
+        "php": "~7.2",
+        "ext-json": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "2.1.0"

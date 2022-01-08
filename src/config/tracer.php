@@ -1,35 +1,40 @@
 <?php
-//定义切入方法区分大小写
+//区分大小写
+use xioayangguang\webman_tracer\aspect\ElasticsearchAspect;
+use xioayangguang\webman_tracer\aspect\GenericAspect;
+use xioayangguang\webman_tracer\aspect\MysqlAspect;
+use xioayangguang\webman_tracer\aspect\RedisAspect;
+
 return [
-    'rate' => 0.99,
-    'report_time' => 10,
-    'endpoint_url' => 'http://127.0.0.1:9411/api/v2/spans',
-
-    \app\aop\RedisAspect::class => [
-        \support\bootstrap\Redis::class => [
-            '__callStatic',
+    'rate' => 0.99,  // 抽样率 0到1之间 可空默认为1
+    'report_time' => 10,  //每10秒上报一次  可空默认10秒
+    'service_name' => 'API_SERVICE', //当前节点名称可空
+    'ipv4' => '', // ip 地址可空
+    'port' => '8787', //端口可空
+    'endpoint_url' => 'http://127.0.0.1:9411/api/v2/spans', //上报地址
+    'tracer' => [
+        RedisAspect::class => [ //追踪类
+            \support\Redis::class => [  //被追踪类
+                '__callStatic', //被追踪方法
+            ],
         ],
-    ],
-    \app\aop\ESAspect::class => [
-        \support\bootstrap\EsClient::class => [
-            '__callStatic',
-            '__call',
+        ElasticsearchAspect::class => [//追踪类
+            \support\EsClient::class => [
+                '__callStatic',//被追踪方法
+                '__call',//被追踪方法
+            ],
         ],
-    ],
-    \app\aop\MysqlAspect::class => [
-        'vendor/topthink/think-orm/src/db/PDOConnection' => [  //切入底层数据库执行方法
-            'getPDOStatement',
+        MysqlAspect::class => [//追踪类
+            'vendor/topthink/think-orm/src/db/PDOConnection' => [  //追踪底层数据库执行方法例子
+                'getPDOStatement',//被追踪方法
+            ],
         ],
-    ],
-
-    \app\aop\MethodAspect::class => [
-        \app\aop\Test::class => [
-            'search',
+        GenericAspect::class => [ //追踪类 通用追踪节点 任由开发者发挥
+            app\social\service\PostService::class => [
+                'searchByIds',
+            ],
         ],
-        app\social\service\PostService::class => [
-            'searchByIds',
-        ],
-    ],
+    ]
 ];
 
 

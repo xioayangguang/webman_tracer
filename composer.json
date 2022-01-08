@@ -17,7 +17,8 @@
   "require": {
     "php": "~7.2",
     "openzipkin/zipkin": "2.0.2",
-    "xiaoyangguang/webman_aop": "*"
+    "xiaoyangguang/webman_aop": "*",
+    "ext-json": "*"
   },
   "autoload": {
     "psr-4": {

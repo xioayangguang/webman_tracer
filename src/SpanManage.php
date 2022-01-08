@@ -8,6 +8,7 @@ namespace xioayangguang\webman_tracer;
 
 use Webman\Http\Response;
 use Workerman\Timer;
+use xioayangguang\webman_aop\AopRegister;
 use Zipkin\Endpoint;
 use Zipkin\Propagation\DefaultSamplingFlags;
 use Zipkin\Propagation\Map;
@@ -123,27 +124,60 @@ class SpanManage
 
     /**
      * 初始化链路追踪
+     * @throws \Exception
      */
     private static function createTracer()
     {
         if (!self::$tracing instanceof Tracing) {
-            var_dump('初始化一次');
-            $endpoint = Endpoint::create('API服务', self::getServerIp(), null, 8787);
-            $reporter = new Http(['endpoint_url' => 'http://127.0.0.1:9411/api/v2/spans']);
-            $sampler = PercentageSampler::create(0.99);
+            $tracer = config('tracer');
+            if (empty($tracer['endpoint_url'])) new \Exception('endpoint_url 不能为空');
+            $ipv4 = empty($tracer['ipv4']) ? self::getServerIp() : $tracer['ipv4'];
+            $service_name = empty($tracer['service_name']) ? 'API_SERVICE' : $tracer['service_name'];
+            $endpoint = Endpoint::create($service_name, $ipv4, null, $tracer['port'] ?? null);
+            $reporter = new Http(['endpoint_url' => $tracer['endpoint_url']]);
+            $sampler = PercentageSampler::create($tracer['rate'] ?? 1);
             self::$tracing = TracingBuilder::create()
                 ->havingLocalEndpoint($endpoint)
                 ->havingSampler($sampler)
                 ->havingReporter($reporter)
                 ->build();
             self::$tracer = self::$tracing->getTracer();
-            Timer::add(10, function () {
+            Timer::add($tracer['report_time'] ?? 10, function () {
                 self::$tracer->flush();
             });
             register_shutdown_function(function () {
                 self::$tracer->flush();
             });
+            self::arrayMergeDeep($tracer['tracer'], config('aop'));
+            AopRegister::GenerateProxy($tracer['tracer']);
         }
+    }
+
+    /**
+     * 深度合并数组
+     * @param ...$arrs
+     * @return array
+     */
+    private static function arrayMergeDeep(...$arrs)
+    {
+        $merged = [];
+        while ($arrs) {
+            $array = array_shift($arrs);
+            if (!$array) continue;
+            foreach ($array as $key => $value) {
+                if (is_string($key)) {
+                    if (is_array($value) && array_key_exists($key, $merged)
+                        && is_array($merged[$key])) {
+                        $merged[$key] = self::arrayMergeDeep(...[$merged[$key], $value]);
+                    } else {
+                        $merged[$key] = $value;
+                    }
+                } else {
+                    $merged[] = $value;
+                }
+            }
+        }
+        return $merged;
     }
 
     /**
