@@ -1,0 +1,27 @@
+{
+  "name": "xiaoyangguang/webman_tracer",
+  "description": "webman_tracer",
+  "keywords": [
+    "webman",
+    "tracer"
+  ],
+  "authors": [
+    {
+      "name": "xiaoyangguang",
+      "email": "930029203@qq.com",
+      "homepage": "https://www.workerman.net/",
+      "role": "Developer"
+    }
+  ],
+  "type": "library",
+  "require": {
+    "php": "~7.2",
+    "openzipkin/zipkin": "2.0.2",
+    "xiaoyangguang/webman_aop": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "xioayangguang\\webman_tracer\\": "./src"
+    }
+  }
+}
