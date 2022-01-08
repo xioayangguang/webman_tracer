@@ -4,8 +4,9 @@
  * User: zhangxiaoxiao
  */
 
-namespace xioayangguang\webman_tracer\aspect;
+namespace xioayangguang\webman_tracer\example;
 
+use xioayangguang\webman_tracer\aspect\GenericAspect;
 use xioayangguang\webman_tracer\SpanManage;
 use Zipkin\Endpoint;
 use Zipkin\Span;

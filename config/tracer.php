@@ -1,9 +1,9 @@
 <?php
 //区分大小写
-use xioayangguang\webman_tracer\aspect\ElasticsearchAspect;
 use xioayangguang\webman_tracer\aspect\GenericAspect;
-use xioayangguang\webman_tracer\aspect\MysqlAspect;
-use xioayangguang\webman_tracer\aspect\RedisAspect;
+use xioayangguang\webman_tracer\example\ElasticsearchAspect;
+use xioayangguang\webman_tracer\example\MysqlAspect;
+use xioayangguang\webman_tracer\example\RedisAspect;
 
 return [
     'rate' => 0.99,  // 抽样率 0到1之间 可空默认为1

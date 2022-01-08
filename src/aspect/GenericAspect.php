@@ -22,7 +22,7 @@ class GenericAspect implements AspectInterface
     {
         SpanManage::startNextSpan($class . '::' . $method, function (Span $child_Span) use ($params) {
             foreach ($params as $key => $value) {
-                $child_Span->tag("params_{$key}", json_encode($value));
+                $child_Span->tag($key, json_encode($value));
             }
         });
     }

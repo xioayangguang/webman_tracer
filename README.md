@@ -25,10 +25,10 @@ return [
 ```php
 <?php
 //区分大小写
-use xioayangguang\webman_tracer\aspect\ElasticsearchAspect;
 use xioayangguang\webman_tracer\aspect\GenericAspect;
-use xioayangguang\webman_tracer\aspect\MysqlAspect;
-use xioayangguang\webman_tracer\aspect\RedisAspect;
+use xioayangguang\webman_tracer\example\ElasticsearchAspect;
+use xioayangguang\webman_tracer\example\MysqlAspect;
+use xioayangguang\webman_tracer\example\RedisAspect;
 
 return [
     'rate' => 0.99,  // 抽样率 0到1之间 可空默认为1
@@ -38,6 +38,8 @@ return [
     'port' => '8787', //端口可空
     'endpoint_url' => 'http://127.0.0.1:9411/api/v2/spans', //上报地址
     'tracer' => [
+        //以下只是使用方式，由于使用的组件不一样,需要上传的数据也不一样，
+        //需自行实现自己追踪的类，任由开发者发挥
         RedisAspect::class => [ //追踪类
             \support\Redis::class => [  //被追踪类
                 '__callStatic', //被追踪方法
@@ -54,7 +56,7 @@ return [
                 'getPDOStatement',//被追踪方法
             ],
         ],
-        GenericAspect::class => [ //追踪类 通用追踪节点 任由开发者发挥
+        GenericAspect::class => [ //通用追踪节点 适应性最强
             app\social\service\PostService::class => [
                 'searchByIds',
             ],
@@ -78,6 +80,7 @@ use xioayangguang\webman_aop\AspectInterface;
 use xioayangguang\webman_tracer\SpanManage;
 use Zipkin\Span;
 
+//依赖切面 必须实现AspectInterface接口
 class GenericAspect implements AspectInterface
 {
     /**
