@@ -50,17 +50,17 @@ class SpanManage
     public static function startNextSpan(string $span_name, callable $callable = null)
     {
         if (self::$initialization) {
-            /** @var Span $parentContext */
-            $parentContext = end(self::$span_stack);
-            $child_Span = self::$tracer->nextSpan($parentContext->getContext());
-            $child_Span->setKind(CLIENT);
-            $child_Span->setName($span_name);
-            $child_Span->start();
-            //用 self::$span_stack[] = $child_Span;  比array_push效率更高
-            //array_push(self::$span_stack, $child_Span);
-            self::$span_stack[] = $child_Span;
-            if (is_callable($callable)) $callable($child_Span);
-            return $child_Span;
+            /** @var Span $parent_span */
+            $parent_span = end(self::$span_stack);
+            $child_span = self::$tracer->nextSpan($parent_span->getContext());
+            $child_span->setKind(CLIENT);
+            $child_span->setName($span_name);
+            $child_span->start();
+            //用 self::$span_stack[] = $child_span;  比array_push效率更高
+            //array_push(self::$span_stack, $child_span);
+            self::$span_stack[] = $child_span;
+            if (is_callable($callable)) $callable($child_span);
+            return $child_span;
         }
     }
 
@@ -72,23 +72,23 @@ class SpanManage
     {
         if (self::$initialization) {
             //不在此pop的原因是后置操作如有异常栈会异常
-            /** @var Span $child_Span */
-            $child_Span = end(self::$span_stack);
-            if ($callable) $callable($child_Span);
-            $child_Span->finish();
+            /** @var Span $child_span */
+            $child_span = end(self::$span_stack);
+            if ($callable) $callable($child_span);
+            $child_span->finish();
             array_pop(self::$span_stack);
         }
     }
 
     /**
      * 创建 root span
-     * @param callable $beforeCallable
-     * @param callable $afterCallable
+     * @param callable $before_callable
+     * @param callable $after_callable
      * @param array|null $carrier
      * @return Response
      * @throws \Throwable
      */
-    public static function startRootSpan(callable $beforeCallable, callable $afterCallable, array $carrier = null)
+    public static function startRootSpan(callable $before_callable, callable $after_callable, array $carrier = null)
     {
         if (isset($carrier['x-b3-traceid']) and isset($carrier['x-b3-spanid']) and
             isset($carrier['x-b3-parentspanid']) and isset($carrier['x-b3-sampled'])
@@ -104,8 +104,8 @@ class SpanManage
         $root_span->start();
         try {
             array_push(self::$span_stack, $root_span);
-            $response = $beforeCallable($root_span);
-            if (is_callable($afterCallable)) $afterCallable($root_span, $response);
+            $response = $before_callable($root_span);
+            if (is_callable($after_callable)) $after_callable($root_span, $response);
             return $response;
         } catch (\Throwable $throwable) {
             $root_span->tag('method.message', $throwable->getMessage());
@@ -160,10 +160,10 @@ class SpanManage
         exec("ifconfig", $out, $stats);
         if (!empty($out)) {
             if (isset($out[1]) && strstr($out[1], 'addr:')) {
-                $tmpArray = explode(":", $out[1]);
-                $tmpIp = explode(" ", $tmpArray[1]);
-                if (preg_match($preg, trim($tmpIp[0]))) {
-                    return trim($tmpIp[0]);
+                $tmp_array = explode(":", $out[1]);
+                $tmp_ip = explode(" ", $tmp_array[1]);
+                if (preg_match($preg, trim($tmp_ip[0]))) {
+                    return trim($tmp_ip[0]);
                 }
             }
         }

@@ -20,11 +20,11 @@ class RedisAspect extends GenericAspect
      */
     public static function beforeAdvice($params, $class, $method): void
     {
-        SpanManage::startNextSpan("Redis::{$class}::{$method}", function (Span $child_Span) use ($params) {
+        SpanManage::startNextSpan("Redis::{$class}::{$method}", function (Span $child_span) use ($params) {
             if (isset($params['name']) and isset($params['arguments'])) {
-                $child_Span->tag($params['name'], json_encode($params['arguments']));
+                $child_span->tag($params['name'], json_encode($params['arguments']));
             }
-            $child_Span->setRemoteEndpoint(Endpoint::create('Redis', '127.0.0.3', null, null));
+            $child_span->setRemoteEndpoint(Endpoint::create('Redis', '127.0.0.3', null, null));
         });
     }
 
@@ -37,8 +37,8 @@ class RedisAspect extends GenericAspect
      */
     public static function afterAdvice(&$res, $params, $class, $method): void
     {
-        SpanManage::stopNextSpan(function (Span $child_Span) use ($params, $res) {
-            $child_Span->tag('Result', json_encode($res));
+        SpanManage::stopNextSpan(function (Span $child_span) use ($params, $res) {
+            $child_span->tag('Result', json_encode($res));
         });
     }
 }

@@ -10,12 +10,12 @@
 composer require xiaoyangguang/webman_tracer
 ```
 
-> 配置 middleware.php.php文件
+> 配置 bootstrap.php文件
 
 ```php
 <?php
 return [
-    xioayangguang\webman_tracer\middleware\Tracer::class 
+     xioayangguang\webman_tracer\bootstrap\Tracer::class,
      //....省略其他 
 ];
 ```
@@ -94,9 +94,9 @@ class GenericAspect implements AspectInterface
     public static function beforeAdvice($params, $class, $method): void
     {
         //SpanManage自动维护调用栈 parentspan
-        SpanManage::startNextSpan($class . '::' . $method, function (Span $child_Span) use ($params) {
+        SpanManage::startNextSpan($class . '::' . $method, function (Span $child_span) use ($params) {
             foreach ($params as $key => $value) {
-                $child_Span->tag("params_{$key}", json_encode($value));
+                $child_span->tag("params_{$key}", json_encode($value));
             }
         });
     }
@@ -111,8 +111,8 @@ class GenericAspect implements AspectInterface
     public static function afterAdvice(&$res, $params, $class, $method): void
     {
        //SpanManage自动维护调用栈 parentspan  有startNextSpan 必须有stopNextSpan 
-        SpanManage::stopNextSpan(function (Span $child_Span) use ($params, $res) {
-            $child_Span->tag('method_return', json_encode($res));
+        SpanManage::stopNextSpan(function (Span $child_span) use ($params, $res) {
+            $child_span->tag('method_return', json_encode($res));
         });
     }
 
@@ -125,10 +125,10 @@ class GenericAspect implements AspectInterface
      */
     public static function exceptionHandler($throwable, $params, $class, $method): void
     {
-        SpanManage::stopNextSpan(function (Span $child_Span) use ($throwable) {
-            $child_Span->tag('exception.message', $throwable->getMessage());
-            $child_Span->tag('exception.code', $throwable->getCode());
-            $child_Span->tag('exception.stacktrace', $throwable->getTraceAsString());
+        SpanManage::stopNextSpan(function (Span $child_span) use ($throwable) {
+            $child_span->tag('exception.message', $throwable->getMessage());
+            $child_span->tag('exception.code', $throwable->getCode());
+            $child_span->tag('exception.stacktrace', $throwable->getTraceAsString());
         });
     }
 }
