@@ -4,7 +4,7 @@
  * User: zhangxiaoxiao
  */
 
-namespace xioayangguang\webman_tracer\middleware;
+namespace xioayangguang\webman_tracer\core;
 
 use Webman\MiddlewareInterface;
 use Webman\Http\Response;
@@ -12,7 +12,7 @@ use Webman\Http\Request;
 use xioayangguang\webman_tracer\SpanManage;
 use Zipkin\Span;
 
-class Tracer implements MiddlewareInterface
+class RootSpan implements MiddlewareInterface
 {
     public function process(Request $request, callable $next): Response
     {

@@ -6,7 +6,6 @@
 
 namespace xioayangguang\webman_tracer\example;
 
-use xioayangguang\webman_tracer\aspect\GenericAspect;
 use xioayangguang\webman_tracer\SpanManage;
 use Zipkin\Endpoint;
 use Zipkin\Span;
@@ -21,7 +20,7 @@ class ElasticsearchAspect extends GenericAspect
      */
     public static function beforeAdvice($params, $class, $method): void
     {
-        SpanManage::startNextSpan("es::{$class}::{$method}", function (Span $child_Span) use ($params) {
+        SpanManage::startNextSpan("Elasticsearch::{$class}::{$method}", function (Span $child_Span) use ($params) {
             foreach ($params as $key => $value) {
                 $child_Span->tag($key, json_encode($value));
             }

@@ -8,7 +8,6 @@ namespace xioayangguang\webman_tracer;
 
 use Webman\Http\Response;
 use Workerman\Timer;
-use xioayangguang\webman_aop\AopRegister;
 use Zipkin\Endpoint;
 use Zipkin\Propagation\DefaultSamplingFlags;
 use Zipkin\Propagation\Map;
