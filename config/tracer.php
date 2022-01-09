@@ -8,6 +8,11 @@ use xioayangguang\webman_tracer\example\GenericAspect;
 use xioayangguang\webman_tracer\example\MysqlAspect;
 use xioayangguang\webman_tracer\example\RedisAspect;
 
+MysqlAspect::setConfig('业务数据库', '127.0.0.1');
+RedisAspect::setConfig('业务Redis');
+ElasticsearchAspect::setConfig('业务Elasticsearch');
+//HttpAspect::setConfig();
+
 return [
     'is_enable' => true,  // 是否开启 可空默认false
     'rate' => 0.99,  // 抽样率 0到1之间 可空默认为1

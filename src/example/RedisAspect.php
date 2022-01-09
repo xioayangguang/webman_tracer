@@ -12,6 +12,8 @@ use Zipkin\Span;
 
 class RedisAspect extends GenericAspect
 {
+    use AopTrait;
+
     /**
      * 前置通知
      * @param $params
@@ -24,7 +26,12 @@ class RedisAspect extends GenericAspect
             if (isset($params['name']) and isset($params['arguments'])) {
                 $child_span->tag($params['name'], json_encode($params['arguments']));
             }
-            $child_span->setRemoteEndpoint(Endpoint::create('Redis', '127.0.0.3', null, null));
+            $child_span->setRemoteEndpoint(Endpoint::create(
+                self::$service_name ?: 'Redis',
+                self::$ipv4 ?: '127.0.0.1',
+                self::$ipv6,
+                self::$port ?: 6379
+            ));
         });
     }
 

@@ -12,6 +12,8 @@ use Zipkin\Span;
 
 class ElasticsearchAspect extends GenericAspect
 {
+    use AopTrait;
+
     /**
      * 前置通知
      * @param $params
@@ -24,7 +26,12 @@ class ElasticsearchAspect extends GenericAspect
             foreach ($params as $key => $value) {
                 $child_span->tag($key, json_encode($value));
             }
-            $child_span->setRemoteEndpoint(Endpoint::create('Elasticsearch', '127.0.0.4', null, null));
+            $child_span->setRemoteEndpoint(Endpoint::create(
+                self::$service_name ?: 'Elasticsearch',
+                self::$ipv4 ?: '127.0.0.1',
+                self::$ipv6,
+                self::$port ?: 80
+            ));
         });
     }
 }
