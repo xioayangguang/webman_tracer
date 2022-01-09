@@ -1,25 +1,24 @@
 <?php
-//严格区分大小写
+//区分大小写
+use app\social\service\PostService;
+use support\bootstrap\EsClient;
+use think\db\PDOConnection;
 use xioayangguang\webman_tracer\example\ElasticsearchAspect;
 use xioayangguang\webman_tracer\example\GenericAspect;
 use xioayangguang\webman_tracer\example\MysqlAspect;
 use xioayangguang\webman_tracer\example\RedisAspect;
-use app\social\service\PostService;
-use support\Redis;
-use support\EsClient;
-use think\db\PDOConnection;
 
 return [
     'is_enable' => true,  // 是否开启 可空默认false
     'rate' => 0.99,  // 抽样率 0到1之间 可空默认为1
     'report_time' => 10,  //每10秒上报一次  可空默认10秒
     'service_name' => 'API_SERVICE', //当前节点名称可空
-    'ipv4' => '',  //ip地址可空
+    'ipv4' => '', // ip 地址可空
     'port' => '8787', //端口可空
     'endpoint_url' => 'http://127.0.0.1:9411/api/v2/spans', //上报地址
     'tracer' => [
         RedisAspect::class => [ //追踪类
-            Redis::class => [  //被追踪类
+            support\bootstrap\Redis::class => [  //被追踪类
                 '__callStatic', //被追踪方法
             ],
         ],
@@ -41,6 +40,3 @@ return [
         ],
     ]
 ];
-
-
-
