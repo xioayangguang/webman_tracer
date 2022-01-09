@@ -26,7 +26,7 @@ class Tracer implements MiddlewareInterface
             $root_span->tag('http.method', $request->method());
             return $next($request);
         }, function (Span $root_span, Response $response) {
-            $root_span->tag('http.response_code', $response->getStatusCode());
+            $root_span->tag('http.response.code', $response->getStatusCode());
             $root_span->tag('http.response.data', $response->rawBody());
         }, $request->header());
     }

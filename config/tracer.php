@@ -6,6 +6,7 @@ use xioayangguang\webman_tracer\example\MysqlAspect;
 use xioayangguang\webman_tracer\example\RedisAspect;
 
 return [
+    'is_enable' => true,  // 是否开启 可空默认false
     'rate' => 0.99,  // 抽样率 0到1之间 可空默认为1
     'report_time' => 10,  //每10秒上报一次  可空默认10秒
     'service_name' => 'API_SERVICE', //当前节点名称可空

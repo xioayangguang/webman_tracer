@@ -91,7 +91,6 @@ class SpanManage
      */
     public static function startRootSpan(callable $beforeCallable, callable $afterCallable, array $carrier = null)
     {
-        self::createTracer();
         if (isset($carrier['x-b3-traceid']) and isset($carrier['x-b3-spanid']) and
             isset($carrier['x-b3-parentspanid']) and isset($carrier['x-b3-sampled'])
         ) {
@@ -122,11 +121,12 @@ class SpanManage
         }
     }
 
+
     /**
      * 初始化链路追踪
      * @throws \Exception
      */
-    private static function createTracer()
+    public static function createTracer()
     {
         if (!self::$tracing instanceof Tracing) {
             $tracer = config('tracer');
@@ -148,36 +148,7 @@ class SpanManage
             register_shutdown_function(function () {
                 self::$tracer->flush();
             });
-            self::arrayMergeDeep($tracer['tracer'], config('aop'));
-            AopRegister::GenerateProxy($tracer['tracer']);
         }
-    }
-
-    /**
-     * 深度合并数组
-     * @param ...$arrs
-     * @return array
-     */
-    private static function arrayMergeDeep(...$arrs)
-    {
-        $merged = [];
-        while ($arrs) {
-            $array = array_shift($arrs);
-            if (!$array) continue;
-            foreach ($array as $key => $value) {
-                if (is_string($key)) {
-                    if (is_array($value) && array_key_exists($key, $merged)
-                        && is_array($merged[$key])) {
-                        $merged[$key] = self::arrayMergeDeep(...[$merged[$key], $value]);
-                    } else {
-                        $merged[$key] = $value;
-                    }
-                } else {
-                    $merged[] = $value;
-                }
-            }
-        }
-        return $merged;
     }
 
     /**
