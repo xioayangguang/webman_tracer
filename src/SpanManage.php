@@ -7,16 +7,9 @@
 namespace xioayangguang\webman_tracer;
 
 use Webman\Http\Response;
-use Workerman\Timer;
-use Zipkin\Endpoint;
+use xioayangguang\webman_tracer\core\TracerInitialize;
 use Zipkin\Propagation\DefaultSamplingFlags;
-use Zipkin\Propagation\Map;
-use Zipkin\Reporters\Http;
-use Zipkin\Samplers\PercentageSampler;
 use Zipkin\Span;
-use Zipkin\Tracer;
-use Zipkin\Tracing;
-use Zipkin\TracingBuilder;
 use const Zipkin\Kind\CLIENT;
 use const Zipkin\Kind\SERVER;
 
@@ -26,15 +19,6 @@ class SpanManage
      * @var array
      */
     private static $span_stack = [];
-    /**
-     * @var Tracing
-     */
-    private static $tracing = null;
-
-    /**
-     * @var Tracer
-     */
-    private static $tracer = null;
 
     /**
      * @var bool
@@ -52,7 +36,7 @@ class SpanManage
         if (self::$initialization) {
             /** @var Span $parent_span */
             $parent_span = end(self::$span_stack);
-            $child_span = self::$tracer->nextSpan($parent_span->getContext());
+            $child_span = TracerInitialize::getTracer()->nextSpan($parent_span->getContext());
             $child_span->setKind(CLIENT);
             $child_span->setName($span_name);
             $child_span->start();
@@ -93,10 +77,9 @@ class SpanManage
         if (isset($carrier['x-b3-traceid']) and isset($carrier['x-b3-spanid']) and
             isset($carrier['x-b3-parentspanid']) and isset($carrier['x-b3-sampled'])
         ) {
-            $extractor = self::$tracing->getPropagation()->getExtractor(new Map());
-            $root_span = self::$tracer->nextSpan($extractor($carrier));
+            $root_span = TracerInitialize::getTracer()->nextSpan(TracerInitialize::getSamplingFlags($carrier));
         } else {
-            $root_span = self::$tracer->newTrace(DefaultSamplingFlags::createAsEmpty());
+            $root_span = TracerInitialize::getTracer()->newTrace(DefaultSamplingFlags::createAsEmpty());
         }
         $root_span->setKind(SERVER);
         self::$span_stack = [];
@@ -116,57 +99,7 @@ class SpanManage
             array_pop(self::$span_stack);
             self::$initialization = false;
             $root_span->finish();
-            self::$tracer->flush();
+            TracerInitialize::getTracer()->flush();
         }
-    }
-
-
-    /**
-     * 初始化链路追踪
-     * @throws \Exception
-     */
-    public static function createTracer()
-    {
-        if (!self::$tracing instanceof Tracing) {
-            $tracer = config('tracer');
-            if (empty($tracer['endpoint_url'])) new \Exception('endpoint_url 不能为空');
-            $ipv4 = empty($tracer['ipv4']) ? self::getServerIp() : $tracer['ipv4'];
-            $service_name = empty($tracer['service_name']) ? 'API_SERVICE' : $tracer['service_name'];
-            $endpoint = Endpoint::create($service_name, $ipv4, null, $tracer['port'] ?? null);
-            $reporter = new Http(['endpoint_url' => $tracer['endpoint_url']]);
-            $sampler = PercentageSampler::create($tracer['rate'] ?? 1);
-            self::$tracing = TracingBuilder::create()
-                ->havingLocalEndpoint($endpoint)
-                ->havingSampler($sampler)
-                ->havingReporter($reporter)
-                ->build();
-            self::$tracer = self::$tracing->getTracer();
-            Timer::add($tracer['report_time'] ?? 10, function () {
-                self::$tracer->flush();
-            });
-            register_shutdown_function(function () {
-                self::$tracer->flush();
-            });
-        }
-    }
-
-    /**
-     * 获取服务器局域网ip
-     * @return mixed
-     */
-    private static function getServerIp()
-    {
-        $preg = "/\A((([0-9]?[0-9])|(1[0-9]{2})|(2[0-4][0-9])|(25[0-5]))\.){3}(([0-9]?[0-9])|(1[0-9]{2})|(2[0-4][0-9])|(25[0-5]))\Z/";
-        exec("ifconfig", $out, $stats);
-        if (!empty($out)) {
-            if (isset($out[1]) && strstr($out[1], 'addr:')) {
-                $tmp_array = explode(":", $out[1]);
-                $tmp_ip = explode(" ", $tmp_array[1]);
-                if (preg_match($preg, trim($tmp_ip[0]))) {
-                    return trim($tmp_ip[0]);
-                }
-            }
-        }
-        return '127.0.0.1';
     }
 }

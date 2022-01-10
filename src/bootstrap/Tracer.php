@@ -10,7 +10,7 @@ use Webman\Bootstrap;
 use Webman\Middleware;
 use xioayangguang\webman_aop\bootstrap\AopRegister;
 use xioayangguang\webman_tracer\core\Injection;
-use xioayangguang\webman_tracer\SpanManage;
+use xioayangguang\webman_tracer\core\TracerInitialize;
 
 class Tracer implements Bootstrap
 {
@@ -21,13 +21,10 @@ class Tracer implements Bootstrap
      */
     public static function start($worker)
     {
-        if (config('tracer.is_enable', false)) {
-            $tracer = config('tracer.tracer');
+        if (TracerInitialize::createTracer()) {
+            $tracer = config('tracer');
             $tracer[Injection::class] = [Middleware::class => ['getMiddleware']];
             AopRegister::appendProxy($tracer);
-            SpanManage::createTracer();
-            //Bootstrap 加载的时候 APP没加载 此方法行不通
-            //Middleware::load(['' => [\xioayangguang\webman_tracer\middleware\Tracer::class]]);
         }
     }
 }

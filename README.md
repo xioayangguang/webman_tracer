@@ -15,7 +15,7 @@ composer require xiaoyangguang/webman_tracer
 ```php
 <?php
 return [
-     xioayangguang\webman_tracer\bootstrap\Tracer::class,
+     xioayangguang\webman_tracer\bootstrap\TracerInitialize::class,
      //....省略其他 
 ];
 ```
