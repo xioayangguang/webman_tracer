@@ -59,8 +59,8 @@ class TracerInitialize
         string $port = null, int $rate = 1, int $report_time = 10, string $ipv6 = null
     )
     {
-        self::$config['service_name'] = $service_name;
-        self::$config['endpoint_url'] = $endpoint_url;
+        if ($service_name) self::$config['service_name'] = $service_name;
+        if ($endpoint_url) self::$config['endpoint_url'] = $endpoint_url;
         self::$config['is_enable'] = $is_enable;
         self::$config['ipv4'] = $ipv4;
         self::$config['port'] = $port;
