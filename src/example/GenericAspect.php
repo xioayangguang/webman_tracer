@@ -18,7 +18,7 @@ class GenericAspect implements AspectInterface
      * @param $class
      * @param $method
      */
-    public static function beforeAdvice($params, $class, $method): void
+    public static function beforeAdvice(&$params, $class, $method): void
     {
         //startNextSpan和stopNextSpan 必须一一对应，不能只有startNextSpan没有stopNextSpan
         SpanManage::startNextSpan($class . '::' . $method, function (Span $child_span) use ($params) {

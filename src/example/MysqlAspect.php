@@ -20,7 +20,7 @@ class MysqlAspect extends GenericAspect
      * @param $class
      * @param $method
      */
-    public static function beforeAdvice($params, $class, $method): void
+    public static function beforeAdvice(&$params, $class, $method): void
     {
         SpanManage::startNextSpan("Mysql::{$class}::{$method}", function (Span $child_span) use ($params) {
             foreach ($params as $key => $value) {

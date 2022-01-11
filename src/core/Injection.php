@@ -11,7 +11,7 @@ use xioayangguang\webman_aop\AspectInterface;
 
 class Injection implements AspectInterface
 {
-    public static function beforeAdvice($params, $class, $method): void
+    public static function beforeAdvice(&$params, $class, $method): void
     {
     }
     public static function afterAdvice(&$res, $params, $class, $method): void

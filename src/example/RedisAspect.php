@@ -20,7 +20,7 @@ class RedisAspect extends GenericAspect
      * @param $class
      * @param $method
      */
-    public static function beforeAdvice($params, $class, $method): void
+    public static function beforeAdvice(&$params, $class, $method): void
     {
         SpanManage::startNextSpan("Redis::{$class}::{$method}", function (Span $child_span) use ($params) {
             if (isset($params['name']) and isset($params['arguments'])) {
