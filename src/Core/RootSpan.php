@@ -4,12 +4,12 @@
  * User: zhangxiaoxiao
  */
 
-namespace xioayangguang\webman_tracer\core;
+namespace Xiaoyangguang\WebmanTracer\Core;
 
 use Webman\MiddlewareInterface;
 use Webman\Http\Response;
 use Webman\Http\Request;
-use xioayangguang\webman_tracer\SpanManage;
+use Xiaoyangguang\WebmanTracer\SpanManage;
 use Zipkin\Span;
 
 class RootSpan implements MiddlewareInterface

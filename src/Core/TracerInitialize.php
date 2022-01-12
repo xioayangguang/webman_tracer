@@ -4,7 +4,7 @@
  * User: zhangxiaoxiao
  */
 
-namespace xioayangguang\webman_tracer\core;
+namespace Xiaoyangguang\WebmanTracer\Core;
 
 use Workerman\Timer;
 use Zipkin\Endpoint;

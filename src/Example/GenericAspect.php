@@ -4,10 +4,10 @@
  * User: zhangxiaoxiao
  */
 
-namespace xioayangguang\webman_tracer\example;
+namespace Xiaoyangguang\WebmanTracer\Example;
 
-use xioayangguang\webman_aop\AspectInterface;
-use xioayangguang\webman_tracer\SpanManage;
+use Xiaoyangguang\WebmanAop\AspectInterface;
+use Xiaoyangguang\WebmanTracer\SpanManage;
 use Zipkin\Span;
 
 class GenericAspect implements AspectInterface

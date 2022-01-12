@@ -4,13 +4,14 @@
  * User: zhangxiaoxiao
  */
 
-namespace xioayangguang\webman_tracer\example;
+namespace Xiaoyangguang\WebmanTracer\Example;
 
-use xioayangguang\webman_tracer\SpanManage;
+use Xiaoyangguang\WebmanTracer\SpanManage;
 use Zipkin\Endpoint;
 use Zipkin\Span;
 
-class MysqlAspect extends GenericAspect
+//业务不同，组件不同 无法统一
+class HttpAspect extends GenericAspect
 {
     use AopTrait;
 
@@ -22,15 +23,15 @@ class MysqlAspect extends GenericAspect
      */
     public static function beforeAdvice(&$params, $class, $method): void
     {
-        SpanManage::startNextSpan("Mysql::{$class}::{$method}", function (Span $child_span) use ($params) {
+        SpanManage::startNextSpan("Http::{$class}::{$method}", function (Span $child_span) use ($params) {
             foreach ($params as $key => $value) {
                 $child_span->tag($key, json_encode($value));
             }
             $child_span->setRemoteEndpoint(Endpoint::create(
-                self::$service_name ?: 'Mysql',
+                self::$service_name ?: 'Http',
                 self::$ipv4 ?: '127.0.0.1',
                 self::$ipv6,
-                self::$port ?: 3306
+                self::$port ?: 80
             ));
         });
     }

@@ -4,10 +4,10 @@
  * User: zhangxiaoxiao
  */
 
-namespace xioayangguang\webman_tracer\core;
+namespace Xiaoyangguang\WebmanTracer\Core;
 
 use Webman\App;
-use xioayangguang\webman_aop\AspectInterface;
+use Xiaoyangguang\WebmanAop\AspectInterface;
 
 class Injection implements AspectInterface
 {

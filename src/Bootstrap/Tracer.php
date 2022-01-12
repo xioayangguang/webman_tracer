@@ -4,13 +4,13 @@
  * User: zhangxiaoxiao
  */
 
-namespace xioayangguang\webman_tracer\bootstrap;
+namespace Xiaoyangguang\WebmanTracer\Bootstrap;
 
 use Webman\Bootstrap;
 use Webman\Middleware;
-use xioayangguang\webman_aop\bootstrap\AopRegister;
-use xioayangguang\webman_tracer\core\Injection;
-use xioayangguang\webman_tracer\core\TracerInitialize;
+use Xiaoyangguang\WebmanAop\Bootstrap\AopRegister;
+use Xiaoyangguang\WebmanTracer\Core\Injection;
+use Xiaoyangguang\WebmanTracer\Core\TracerInitialize;
 
 class Tracer implements Bootstrap
 {
@@ -23,7 +23,7 @@ class Tracer implements Bootstrap
     {
         if (TracerInitialize::createTracer()) {
             $tracer = config('tracer');
-            $tracer[Injection::class] = [Middleware::class => ['getMiddleware']];
+            //$tracer[Injection::class] = [Middleware::class => ['getMiddleware']];
             AopRegister::appendProxy($tracer);
         }
     }

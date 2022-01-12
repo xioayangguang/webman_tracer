@@ -13,7 +13,7 @@ composer require xiaoyangguang/webman_tracer
 ```php
 <?php
 return [
-     xioayangguang\webman_tracer\bootstrap\TracerInitialize::class,
+     Xiaoyangguang\WebmanTracer\bootstrap\TracerInitialize::class,
      //....省略其他 
 ];
 ```
@@ -27,11 +27,11 @@ use app\social\service\PostService;
 use support\bootstrap\EsClient;
 use support\Redis;
 use think\db\PDOConnection;
-use xioayangguang\webman_tracer\core\TracerInitialize;
-use xioayangguang\webman_tracer\example\ElasticsearchAspect;
-use xioayangguang\webman_tracer\example\GenericAspect;
-use xioayangguang\webman_tracer\example\MysqlAspect;
-use xioayangguang\webman_tracer\example\RedisAspect;
+use Xiaoyangguang\WebmanTracer\core\TracerInitialize;
+use Xiaoyangguang\WebmanTracer\example\ElasticsearchAspect;
+use Xiaoyangguang\WebmanTracer\example\GenericAspect;
+use Xiaoyangguang\WebmanTracer\example\MysqlAspect;
+use Xiaoyangguang\WebmanTracer\example\RedisAspect;
 
 TracerInitialize::setConfig(true);
 MysqlAspect::setConfig('业务数据库', '127.0.0.1');

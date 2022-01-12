@@ -4,10 +4,10 @@
  * User: zhangxiaoxiao
  */
 
-namespace xioayangguang\webman_tracer;
+namespace Xiaoyangguang\WebmanTracer;
 
 use Webman\Http\Response;
-use xioayangguang\webman_tracer\core\TracerInitialize;
+use Xiaoyangguang\WebmanTracer\core\TracerInitialize;
 use Zipkin\Propagation\DefaultSamplingFlags;
 use Zipkin\Span;
 use const Zipkin\Kind\CLIENT;

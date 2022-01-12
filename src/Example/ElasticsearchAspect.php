@@ -4,9 +4,9 @@
  * User: zhangxiaoxiao
  */
 
-namespace xioayangguang\webman_tracer\example;
+namespace Xiaoyangguang\WebmanTracer\Example;
 
-use xioayangguang\webman_tracer\SpanManage;
+use Xiaoyangguang\WebmanTracer\SpanManage;
 use Zipkin\Endpoint;
 use Zipkin\Span;
 

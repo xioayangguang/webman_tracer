@@ -1,6 +1,6 @@
 <?php
 
-namespace xioayangguang\webman_tracer\example;
+namespace Xiaoyangguang\WebmanTracer\Example;
 
 trait AopTrait
 {
